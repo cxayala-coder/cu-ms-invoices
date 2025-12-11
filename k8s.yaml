@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cu-ms-payments
+  name: cu-ms-invoices
   namespace: cx-ayala-dev
   labels:
-    app: cu-ms-payments
+    app: cu-ms-invoices
     depto: pagos
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cu-ms-payments
+      app: cu-ms-invoices
   template:
     metadata:
       labels:
-        app: cu-ms-payments
+        app: cu-ms-invoices
     spec:
       containers:
       - name: hola-mundo
-        image: cxayala/cu-ms-payments:{{ imageTag }}
+        image: cxayala/cu-ms-invoices:{{ imageTag }}
         ports:
           - containerPort: 3000
         resources:
@@ -30,9 +30,9 @@ spec:
             cpu: "300m"
         envFrom:
             - configMapRef:
-                name: cu-ms-payments
+                name: cu-ms-invoices
             - secretRef:
-                name: cu-ms-payments
+                name: cu-ms-invoices
         volumeMounts:
             - name: config
               mountPath: /app/config
@@ -66,16 +66,16 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: cu-ms-payments-config
+            name: cu-ms-invoices-config
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: cu-ms-payments-svc
+  name: cu-ms-invoices-svc
   namespace: cx-ayala-dev
 spec:
   selector:
-    app: cu-ms-payments
+    app: cu-ms-invoices
   ports:
     - protocol: TCP
       port: 3000
@@ -85,7 +85,7 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: cu-ms-payments
+  name: cu-ms-invoices
   namespace: cx-ayala-dev
 data:
   LOG_LEVEL: debug
@@ -97,7 +97,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: cu-ms-payments-config
+  name: cu-ms-invoices-config
   namespace: cx-ayala-dev
 data:
   app.conf: |
@@ -108,7 +108,7 @@ data:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: cu-ms-payments
+  name: cu-ms-invoices
   namespace: cx-ayala-dev
 data:
   DATABASE_PASSWORD: TWlQYXNzd29yZFNlZ3VybzEyMw==
@@ -116,13 +116,13 @@ data:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: cu-ms-payments
+  name: cu-ms-invoices
   namespace: cx-ayala-dev
 spec:
   scaleTargetRef:  
     apiVersion: apps/v1
     kind: Deployment
-    name: cu-ms-payments
+    name: cu-ms-invoices
   minReplicas: 2
   maxReplicas: 6
   metrics:

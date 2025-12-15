@@ -1,51 +1,39 @@
 #!/usr/bin/env python3
 """
-Servidor HTTP simple que responde Hola Mundo
+Servidor HTTP simple que actúa como cliente de cu-ms-payments
 """
 import http.server
 import socketserver
 import sys
 import os
 import json
+import urllib.request
+import urllib.error
 from datetime import datetime
-
-try:
-    import psycopg2
-    POSTGRES_AVAILABLE = True
-except ImportError:
-    POSTGRES_AVAILABLE = False
 
 PORT = 3000
 
-# Configuración de base de datos desde variables de entorno
-DB_HOST = os.environ.get('DATABASE_HOST', 'mi-postgres-postgresql-primary.edisonpaul4-dev.svc.cluster.local')
-DB_PORT = os.environ.get('DATABASE_PORT', '5432')
-DB_NAME = os.environ.get('DATABASE_NAME', 'postgres')
-DB_USER = os.environ.get('DATABASE_USER', 'postgres')
-DB_PASSWORD = os.environ.get('DATABASE_PASSWORD', '')
+# Configuración de cu-ms-payments desde variables de entorno
+PAYMENTS_HOST = os.environ.get('PAYMENTS_SERVICE_HOST', 'cu-ms-payments-svc.cx-ayala-dev.svc.cluster.local')
+PAYMENTS_PORT = os.environ.get('PAYMENTS_SERVICE_PORT', '3000')
+PAYMENTS_URL = f"http://{PAYMENTS_HOST}:{PAYMENTS_PORT}"
 
 def get_users():
-    """Conecta a PostgreSQL y obtiene los usuarios"""
-    if not POSTGRES_AVAILABLE:
-        return {"error": "psycopg2 no está instalado"}
-    
+    """Consulta el endpoint /users de cu-ms-payments"""
     try:
-        conn = psycopg2.connect(
-            host=DB_HOST,
-            port=DB_PORT,
-            database=DB_NAME,
-            user=DB_USER,
-            password=DB_PASSWORD
-        )
-        cursor = conn.cursor()
-        cursor.execute("SELECT id, name FROM users")
-        rows = cursor.fetchall()
-        users = [{"id": row[0], "name": row[1]} for row in rows]
-        cursor.close()
-        conn.close()
-        return {"users": users}
+        url = f"{PAYMENTS_URL}/users"
+        print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Consultando {url}", file=sys.stdout)
+        sys.stdout.flush()
+        
+        with urllib.request.urlopen(url, timeout=5) as response:
+            data = json.loads(response.read().decode('utf-8'))
+            return data
+    except urllib.error.URLError as e:
+        return {"error": f"No se puede conectar a cu-ms-payments: {str(e)}"}
+    except json.JSONDecodeError as e:
+        return {"error": f"Respuesta inválida de cu-ms-payments: {str(e)}"}
     except Exception as e:
-        return {"error": str(e)}
+        return {"error": f"Error consultando cu-ms-payments: {str(e)}"}
 
 class HolaMundoHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):

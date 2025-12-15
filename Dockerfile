@@ -4,8 +4,7 @@ FROM cxayala/super-imagen-base:1
 # INSTRUCCIONES
 WORKDIR /app
 
-# Instalar Flask y psycopg2
-RUN pip install flask psycopg2-binary
+# No necesita instalaciones adicionales (solo la stdlib de Python)
  
 # Copiar el archivo de la aplicación
 COPY app.py .

@@ -87,4 +87,4 @@ if __name__ == "__main__":
     with socketserver.TCPServer(("", PORT), HolaMundoHandler) as httpd:
         print(f"Servidor corriendo en puerto {PORT}")
         print("Presiona Ctrl+C para detener")
-        httpd.serve_forever()
+        httpd.serve_forever() 

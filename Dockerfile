@@ -9,7 +9,7 @@ WORKDIR /app
 # Copiar el archivo de la aplicación
 COPY app.py .
 
-# Exponer el puerto 3000 
+# Exponer el puerto 3001
 EXPOSE 3001
  
 # ENTRYPOINT

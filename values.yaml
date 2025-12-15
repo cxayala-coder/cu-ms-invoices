@@ -2,7 +2,7 @@
 # Chart: edisonpaul4/helm-microservice-chart:1.0.3
 
 # Configuración básica del microservicio
-name: cu-ms-payments
+name: cu-ms-invoices
 namespace: cx-ayala-dev
 imageTag: "1" # Será sobrescrito por CI/CD con --set imageTag=<value>
 port: 3000

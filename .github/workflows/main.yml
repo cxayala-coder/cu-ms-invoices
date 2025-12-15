@@ -25,7 +25,7 @@ jobs:
           docker push cxayala/cu-ms-invoices:${{ github.run_number }}
   deploy:
     name: DEPLOY
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.04 
     needs: build 
     steps:
       - uses: actions/checkout@v4

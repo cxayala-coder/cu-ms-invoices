@@ -10,7 +10,7 @@ WORKDIR /app
 COPY app.py .
 
 # Exponer el puerto 3000
-EXPOSE 3000
+EXPOSE 3001
  
 # ENTRYPOINT
 CMD ["python", "app.py"]

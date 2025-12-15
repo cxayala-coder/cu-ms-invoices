@@ -66,10 +66,15 @@ class HolaMundoHandler(http.server.SimpleHTTPRequestHandler):
             print(f"[{timestamp}] se llamo al endpoints /users", file=sys.stdout)
             sys.stdout.flush()
             result = get_users()
+            # Añadir mensaje de conexión
+            response = {
+                "mensaje": "conectado a cu-ms-payments desde cu-ms-invoices",
+                "datos": result
+            }
             self.send_response(200)
             self.send_header('Content-type', 'application/json; charset=utf-8')
             self.end_headers()
-            self.wfile.write(json.dumps(result).encode('utf-8'))
+            self.wfile.write(json.dumps(response).encode('utf-8'))
         else:
             print(f"[{timestamp}] se llamo al endpoints raiz", file=sys.stdout)
             sys.stdout.flush()

@@ -11,7 +11,7 @@ import urllib.request
 import urllib.error
 from datetime import datetime
 
-PORT = 3000
+PORT = 3000 
 
 # Configuración de cu-ms-payments desde variables de entorno
 PAYMENTS_HOST = os.environ.get('PAYMENTS_SERVICE_HOST', 'cu-ms-payments-svc.cx-ayala-dev.svc.cluster.local')
